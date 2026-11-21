@@ -10,7 +10,6 @@ class Post(BaseModel):
     content:str
     rating:Optional[int]= None
 
-
 myPosts = [{"title" : "title 1", "content" : "content 1", "id" : 1},
           {"title" : "title 2", "content" : "content 2", "id" : 2}]
 
@@ -51,3 +50,13 @@ def deletePost(id : int):
     if index == None : raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail= f"{id} is invalid")
     myPosts.pop(index)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@app.put("/posts/{id}")
+
+def updatePost(id : int, post : Post ):
+    index = findIndex(id);
+    if index == None : raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail= f"{id} is invalid")
+    postDict = post.dict()
+    postDict['id'] = id
+    myPosts[index] = postDict
+    return {"data" : postDict}
